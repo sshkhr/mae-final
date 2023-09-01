@@ -5,9 +5,9 @@
 # LICENSE file in the root directory of this source tree.
 
 import math
-
+import random
 import torch
-
+from PIL import Image, ImageFilter, ImageOps
 from torchvision import transforms
 from torchvision.transforms import functional as F
 
@@ -21,7 +21,7 @@ class RandomResizedCrop(transforms.RandomResizedCrop):
     """
     @staticmethod
     def get_params(img, scale, ratio):
-        width, height = F._get_image_size(img)
+        width, height = F.get_image_size(img)
         area = height * width
 
         target_area = area * torch.empty(1).uniform_(scale[0], scale[1]).item()
@@ -40,3 +40,34 @@ class RandomResizedCrop(transforms.RandomResizedCrop):
         j = torch.randint(0, width - w + 1, size=(1,)).item()
 
         return i, j, h, w
+
+class TwoCropsTransform:
+    """Take two random crops of one image"""
+
+    def __init__(self, base_transform1, base_transform2):
+        self.base_transform1 = base_transform1
+        self.base_transform2 = base_transform2
+
+    def __call__(self, x):
+        im1 = self.base_transform1(x)
+        im2 = self.base_transform2(x)
+        return [im1, im2]
+
+
+class GaussianBlur(object):
+    """Gaussian blur augmentation from SimCLR: https://arxiv.org/abs/2002.05709"""
+
+    def __init__(self, sigma=[.1, 2.]):
+        self.sigma = sigma
+
+    def __call__(self, x):
+        sigma = random.uniform(self.sigma[0], self.sigma[1])
+        x = x.filter(ImageFilter.GaussianBlur(radius=sigma))
+        return x
+
+
+class Solarize(object):
+    """Solarize augmentation from BYOL: https://arxiv.org/abs/2006.07733"""
+
+    def __call__(self, x):
+        return ImageOps.solarize(x)

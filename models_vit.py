@@ -16,6 +16,13 @@ import torch.nn as nn
 
 import timm.models.vision_transformer
 
+__all__ = [
+    'vit_small_patch16', 
+    'vit_base_patch16',
+    'vit_large_patch16',
+    'vit_huge_patch14',
+]
+
 
 class VisionTransformer(timm.models.vision_transformer.VisionTransformer):
     """ Vision Transformer with support for global average pooling
@@ -52,6 +59,11 @@ class VisionTransformer(timm.models.vision_transformer.VisionTransformer):
 
         return outcome
 
+def vit_small_patch16(**kwargs):
+    model = VisionTransformer(
+        patch_size=16, embed_dim=384, depth=12, num_heads=12, mlp_ratio=4, qkv_bias=True,
+        norm_layer=partial(nn.LayerNorm, eps=1e-6), **kwargs)
+    return model
 
 def vit_base_patch16(**kwargs):
     model = VisionTransformer(

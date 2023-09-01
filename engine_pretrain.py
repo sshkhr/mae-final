@@ -45,7 +45,10 @@ def train_one_epoch(model: torch.nn.Module,
         samples = samples.to(device, non_blocking=True)
 
         with torch.cuda.amp.autocast():
-            loss, _, _ = model(samples, mask_ratio=args.mask_ratio)
+            if args.pretraining == 'MAE':
+                loss, _, _ = model(samples, mask_ratio=args.mask_ratio)
+            elif args.pretraining == 'MoCo':
+                loss = model(samples)
 
         loss_value = loss.item()
 
