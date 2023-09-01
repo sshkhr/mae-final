@@ -1,0 +1,21 @@
+data:
+  image_folder: imagenet_full_size/061417/
+  num_classes: 1000
+  root_path: /datasets01/
+logging:
+  folder: /private/home/sshkhr/mae/checkpoints/msn-lin/msn_logs/
+  pretrain_path: /private/home/sshkhr/mae/checkpoints/pretrained/msn_vitb16_600ep.pth.tar
+  write_tag: msn-lineval-experiment-1
+meta:
+  copy_data: false
+  device: cuda:0
+  load_checkpoint: false
+  master_port: 8888
+  model_name: deit_base
+  training: true
+optimization:
+  epochs: 100
+  lr: 6.4
+  normalize: true
+  num_blocks: 1
+  weight_decay: 0.0

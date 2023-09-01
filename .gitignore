@@ -7,6 +7,9 @@
 
 *tfevents*
 
+*.pt
+*.pth.tar
+*.tar
 core
 demo/core
 
